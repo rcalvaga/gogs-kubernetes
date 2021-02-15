@@ -1,0 +1,32 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: gogs
+  namespace: gogs-prod
+spec:
+  replicas: 2
+  selector:
+      matchLabels:
+        app: gogs 
+  template:
+    metadata:
+      labels:
+        app: gogs 
+    spec:
+      containers:
+      - resources:
+        name: gogs
+        image: gogs/gogs
+        ports:
+        - name: gogs-port
+          containerPort: 3000
+        volumeMounts:
+        - mountPath: /data
+          name: data
+      volumes:
+      - name: data
+        hostPath:
+          path: /mnt/gogs/data
+      restartPolicy: Always
+      nodeSelector:
+        name: media.duendecillos.com
